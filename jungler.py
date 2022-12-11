@@ -7,11 +7,15 @@ pygame.init()
 
 #################### GRAVITY ######################
 GRAVITY = 0.74
-TILE_SIZE = 40
+ROWS = 16
+COLS = 150
+TILE_TYPES = 21
+level = 1
 ################## SCREEN SIZE #######################3
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
 
+TILE_SIZE = SCREEN_HEIGHT // ROWS
 ####################### SCREEN SETUP ########################
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 # canvas = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -43,6 +47,13 @@ shoot = False
 
 bullet_img = pygame.image.load(f"img/Explosion/7.png")
 
+# load images
+# store tiles in a list
+img_list = []
+for x in range(TILE_TYPES):
+	img = pygame.image.load(f'img/tile/{x}.png')
+	img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+	img_list.append(img)
 
 class Attack(pygame.sprite.Sprite):
 	def __init__(self, char, x, y, direction, speed, gLeft, gRight):
@@ -223,7 +234,94 @@ class Character(pygame.sprite.Sprite):
 	def draw(self):
 		screen.blit(pygame.transform.flip(self.image, self.flip, False), self.rect)
 
-			
+class World():
+	def __init__(self):
+		self.obstacle_list = []
+
+	def process_data(self, data):
+		# iterate through each value in level data file
+		for y, row in enumerate(data):
+			for x, tile in enumerate(row):
+				if tile >= 0:
+					img = img_list[tile]
+					img_rect = img.get_rect()
+					img_rect.x = x * TILE_SIZE
+					img_rect.y = y * TILE_SIZE
+					tile_data = (img, img_rect)
+					if tile >= 0 and tile <= 8:
+						self.obstacle_list.append(tile_data)
+					elif tile >= 9 and tile <= 10:
+						water = water(img, x * TILE_SIZE, y * TILE_SIZE)
+						water_group.add(water)
+					elif tile >= 11 and tile <= 14:
+						decoration = Decoration(img, x * TILE_SIZE, y * TILE_SIZE)
+						decoration_group.add(decoration)
+					elif tile == 15: # create player
+						player = Character(all_action, TILE_SIZE, y * TILE_SIZE, 1, 100)
+					elif tile == 16: # create enemies
+						enemy = Character(all_action, x * TILE_SIZE, y * TILE_SIZE, 1, 100)
+						enemy_group.add(enemy)
+					# elif tile == 17: # create ammo box
+					# 	item_box = ItemBox('ammo', x  * TILE_SIZE, y * TILE_SIZE)
+					# 	item_box_group.add(item_box)
+					# elif tile == 18: # create grenade box
+					# 	item_box = ItemBox('grenade', x * TILE_SIZE, y * TILE_SIZE)
+					# 	item_box_group.add(item_box)
+					# elif tile == 19: # create health box
+					# 	item_box = ItemBox('health', x * TILE_SIZE, y * TILE_SIZE)
+					# 	item_box_group.add(item_box)
+					# elif tile == 20: # create exit
+					# 	exit = Exit(img, x * TILE_SIZE, y * TILE_SIZE)
+					# 	exit_group.add(exit)
+		return player, health_bar
+	
+	def draw(self):
+		for tile in self.obstacle_list:
+			screen.blit(tile[0], tile[1])
+
+class Decoration(pygame.sprite.Sprite):
+	def __init__(self, img, x, y):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = img
+		self.rect = self.image.get_rect()
+		self.rect.midtop = (x+TILE_SIZE // 2, y+(TILE_SIZE - self.image.get_height()))
+
+class Water(pygame.sprite.Sprite):
+	def __init__(self, img, x, y):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = img
+		self.rect = self.image.get_rect()
+		self.rect.midtop = (x + TILE_SIZE // 2, y + (TILE_SIZE - self.image.get_height()))
+
+class Exit(pygame.sprite.Sprite):
+	def __init__(self, img, x, y):
+		pygame.sprite.Sprite.__init__(self)
+		self.image = img
+		self.rect = self.image.get_rect()
+		self.rect.midtop = (x + TILE_SIZE // 2, y + (TILE_SIZE - self.image.get_height()))
+
+class ItemBox(pygame.sprite.Sprite):
+	def __init__(self, item_type, x, y):
+		pygame.sprite.Sprite.__init__(self)
+		self.item_type = item_type
+		self.image = item_boxes[self.item_type]
+		self.rect = self.image.get_rect()
+		self.rect.midtop = (x + TILE_SIZE // 2, y + (TILE_SIZE - self.image.get_height()))
+
+	def update(self):
+		#check if the player has picked up the box
+		if pygame.sprite.collide_rect(self, player):
+			#check what kind of box it was
+			if self.item_type == 'Health':
+				player.health += 25
+				if player.health > player.max_health:
+					player.health = player.max_health
+			elif self.item_type == 'Ammo':
+				player.ammo += 15
+			elif self.item_type == 'Grenade':
+				player.grenades += 3
+			#delete the item box
+			self.kill()
 
 #################### HEALTH BAR ###########################
 class healthBar(pygame.sprite.Sprite):
