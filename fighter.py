@@ -87,7 +87,7 @@ class Fighter():
           self.vel_y = -30
           self.jump = True
         #attack
-        if key[pygame.K_n] or key[pygame.K_m]:
+        if key[pygame.K_9] or key[pygame.K_0]:
           self.attack(target)
           #determine which attack type was used
           if key[pygame.K_9]:
@@ -132,8 +132,8 @@ class Fighter():
       self.health = 0
       self.alive = False
       self.update_action(6)#6:death
-    elif self.hit == True:
-      self.update_action(5)#5:hit
+    # elif self.hit == True:
+    #   self.update_action(5)#5:hit
     elif self.attacking == True:
       if self.attack_type == 1:
         self.update_action(3)#3:attack1
