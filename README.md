@@ -33,4 +33,19 @@ Enjoy 😎
 
 Pull requests are welcome. 
 
+## Tutorial
+```
+# Player 1
+move left   -   A
+move right  -   D
+jump        -   W
+attack1     -   R
+attack2     -   T
 
+# Player 2
+move left   -   Left 
+move right  -   Right
+jump        -   Up
+attack1     -   ,
+attack2     -   .
+```
