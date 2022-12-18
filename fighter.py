@@ -87,7 +87,7 @@ class Fighter():
           self.vel_y = -30
           self.jump = True
         #attack
-        if key[pygame.K_9] or key[pygame.K_0]:
+        if key[pygame.K_n] or key[pygame.K_m]:
           self.attack(target)
           #determine which attack type was used
           if key[pygame.K_9]:
@@ -118,7 +118,7 @@ class Fighter():
 
     #apply attack cooldown
     if self.attack_cooldown > 0:
-      self.attack_cooldown -= 1
+      self.attack_cooldown -= 10
 
     #update player position
     self.rect.x += dx

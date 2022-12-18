@@ -72,9 +72,9 @@ def draw_text(text, font, text_col, x, y):
   screen.blit(img, (x, y))
 
 #function for drawing background
-def draw_bg():
-  scaled_bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
-  screen.blit(scaled_bg, (0, 0))
+# def draw_bg():
+#   scaled_bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+#   screen.blit(scaled_bg, (0, 0))
 
 #function for drawing fighter health bars
 def draw_health_bar(health, x, y):
@@ -148,6 +148,9 @@ while run:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       run = False
+    if event.type == pygame.KEYDOWN:
+      if event.key == pygame.K_ESCAPE:
+        run = False
 
 
   #update display
