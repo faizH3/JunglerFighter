@@ -12,28 +12,25 @@ Game ini terinspirasi dari game Street Fighter. Di develop menggunakan bahasa pe
 URL: [https://www.pygame.org/news ](https://www.pygame.org/news)
 
 
-## 3. Installing:
+## 3. Install:
 
-1. Clone the git repo
+1. Clone git repo
 
 ```
 https://github.com/faizH3/JunglerFighter.git
 ```
 
-2. Open project folder
+2. Buka Folder JunglerFighter
 
-3. Explore
+3. python3 main.py
 
-4. Open main.py and run
-
-5. Play the game
+4. Play
 
 Enjoy 😎
 
 
-## 4. Contributing:
+## 4. Kontribusi:
 
 Pull requests are welcome. 
 
-For major changes, please open an issue first to discuss what you would like to change with project owner (Coding With faizH3).
 
